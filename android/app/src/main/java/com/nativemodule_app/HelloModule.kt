@@ -12,19 +12,19 @@ class HelloModule(private val reactContext: ReactApplicationContext) :
 
     override fun getName() = "HelloModule"
 
-    @ReactMethod
-    fun getMessage(promise: Promise) {
-        promise.resolve("Hello World from Android Native 🎯")
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun getMessage(): String {
+        return "Hello World from Android Native 🎯"
     }
 
-    @ReactMethod
-fun getBatteryLevel(promise: Promise) {
-    val batteryManager =
-      reactApplicationContext.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+    @ReactMethod(isBlockingSynchronousMethod = true)
+    fun getBatteryLevel(): Int {
+        val batteryManager =
+            reactApplicationContext.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
 
-    val level = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-
-    promise.resolve(level)
-}
+        return batteryManager.getIntProperty(
+            BatteryManager.BATTERY_PROPERTY_CAPACITY
+        )
+    }
 
 }

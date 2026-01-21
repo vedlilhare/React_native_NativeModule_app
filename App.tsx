@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, NativeModules, StyleSheet} from 'react-native';
 
-// 👇 Declare the native module types (important in TS)
+ // 👇 Correct native module types (SYNC)
 type HelloModuleType = {
-  getMessage: () => Promise<string>;
-  getBatteryLevel: () => Promise<string>;
+  getMessage: () => string;
+  getBatteryLevel: () => number;
 };
 
 // 👇 Extract & type it
@@ -14,22 +14,24 @@ const {HelloModule} = NativeModules as {
 
 export default function App() {
   const [msg, setMsg] = useState('Loading...');
-  const [betterylevel , setBetterylevel] = useState('');
+  const [betterylevel , setBetterylevel] = useState<number>(0);
    
 
   useEffect(() => {
-    getbettery();
-    HelloModule.getMessage()
-      .then(setMsg)
-      .catch(() => setMsg('Error reading native module'));
+    try {
+      // ✅ synchronous calls
+      const message = HelloModule.getMessage();
+      const level = HelloModule.getBatteryLevel();
+
+      setMsg(message);
+      setBetterylevel(level);
+
+      console.log(level, 'battery level');
+    } catch (e) {
+      setMsg('Error reading native module');
+    }
   }, []);
 
-
-  const getbettery = async () => {
-    let level = await HelloModule.getBatteryLevel();
-    setBetterylevel(level);
-    console.log(level ,'getbettery level');
-  }
 
   return (
     <View style={styles.container}>
