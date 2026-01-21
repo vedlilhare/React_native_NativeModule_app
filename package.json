@@ -9,6 +9,15 @@
     "start": "react-native start",
     "test": "jest"
   },
+
+  "codegenConfig": {
+    "name": "HelloModuleSpec",
+    "type": "modules",
+    "jsSrcsDir": "./src",
+    "android": {
+      "javaPackageName": "com.nativemodule_app"
+    }
+  },
   "dependencies": {
     "react": "19.2.0",
     "react-native": "0.83.1",

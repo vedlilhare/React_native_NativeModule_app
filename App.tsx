@@ -1,44 +1,28 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, NativeModules, StyleSheet} from 'react-native';
-
- // 👇 Correct native module types (SYNC)
-type HelloModuleType = {
-  getMessage: () => string;
-  getBatteryLevel: () => number;
-};
-
-// 👇 Extract & type it
-const {HelloModule} = NativeModules as {
-  HelloModule: HelloModuleType;
-};
+// ✅ Import TurboModule (NOT NativeModules)
+import HelloModule from './src/NativeHelloModule';
 
 export default function App() {
-  const [msg, setMsg] = useState('Loading...');
-  const [betterylevel , setBetterylevel] = useState<number>(0);
-   
+  const [message, setMessage] = useState('');
+  const [batteryLevel, setBatteryLevel] = useState<number>(0);
 
   useEffect(() => {
-    try {
-      // ✅ synchronous calls
-      const message = HelloModule.getMessage();
-      const level = HelloModule.getBatteryLevel();
+    // ✅ Direct synchronous TurboModule calls
+    const msg = HelloModule.getMessage();
+    const level = HelloModule.getBatteryLevel();
 
-      setMsg(message);
-      setBetterylevel(level);
-
-      console.log(level, 'battery level');
-    } catch (e) {
-      setMsg('Error reading native module');
-    }
+    setMessage(msg);
+    setBatteryLevel(level);
   }, []);
 
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{msg}</Text>
+      <Text style={styles.text}>{message}</Text>
       <View>
         <Text>
-          Bettery Level is - {betterylevel} %
+          Bettery Level is - {batteryLevel} %
         </Text>
       </View>
     </View>
